@@ -1,0 +1,106 @@
+#!/bin/bash
+
+# created by pavroo 2022/02/24
+
+cd ~/.config
+if [ ! -d vala-panel ]; then
+	mkdir vala-panel
+fi
+
+# backup existing vala-panel config
+if [ -f vala-panel/default ]; then
+	CHECKCONF="`cat vala-panel/default | grep sparkylinux`"
+	if [ "$CHECKCONF" = "" ]; then
+		cp vala-panel/default vala-panel/default-$(date +"%m_%d_%Y").bak
+
+# create the launcher config
+cat > vala-panel/default << FOO
+# sparkylinux app launcher 2022/02/24
+[core-version-1]
+units=['xembed', 'toplevel1', 'launcher']
+
+[global]
+is-dark=false
+is-custom=false
+logout-command='loginctl terminate-session $XDG_SESSION_ID'
+shutdown-command='systemctl poweroff'
+
+lock-command=''
+
+[toplevel1]
+object-type='toplevel'
+strut=false
+monitor=-1
+background-type='image'
+panel-gravity='west-center'
+height=55
+icon-size=48
+auto-hide=false
+enable-font-color=true
+font-color='rgb(255,255,255)'
+background-file='/usr/share/vala-panel/images/background.png'
+
+
+autohide=true
+dock=true
+width=25
+use-background-color=true
+use-foreground-color=false
+corner-radius=4
+use-toolbar-appearance=true
+
+use-background-file=false
+background-color='rgba(0,0,0,0)'
+foreground-color='rgba(0,0,0,0)'
+use-font=true
+font='Sans 13'
+font-size-only=false
+
+[sep1]
+
+[menu]
+menu-name=nothing
+
+[launcher]
+toplevel-id='toplevel1'
+plugin-type='org.valapanel.launchbar'
+launch-buttons=['pcmanfm.desktop', 'firefox-esr.desktop', 'menu-xdg-X-Debian-Applications-System-gexec.desktop', 'sparky-aptus-appcenter.desktop', 'lxde-x-terminal-emulator.desktop']
+position=0
+
+object-type='applet'
+
+[sep2]
+
+[wcm]
+image='gnome-window-manager'
+
+[sep3]
+
+[pgr]
+
+[sep4]
+
+[tlist]
+
+[cpu]
+
+[xembed]
+toplevel-id='toplevel1'
+plugin-type='org.valapanel.xembed'
+position=1
+pack-type='end'
+
+object-type='applet'
+
+[clock]
+FOO
+
+WHATUSER=`echo $USER`
+chown -R $WHATUSER:$WHATUSER vala-panel
+	fi
+fi
+
+# launch the launcher
+vala-panel &
+
+exit 0
