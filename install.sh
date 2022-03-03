@@ -16,8 +16,13 @@
 
 if [ "$1" = "uninstall" ]; then
 	rm -f /etc/xdg/autostart/sparky-launcher.desktop
+	rm -rf /etc/sparky-launcher
 	rm -f /usr/bin/sparky-launcher
 else
-	cp etc/* /etc/xdg/autostart/
+	cp etc/*.desktop /etc/xdg/autostart/
+	if [ ! -d /etc/sparky-launcher ]; then
+		mkdir -p /etc/sparky-launcher
+	fi
+	cp etc/default /etc/sparky-launcher/
 	cp bin/* /usr/bin/
 fi
